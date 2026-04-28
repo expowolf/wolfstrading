@@ -751,6 +751,198 @@
     .modal-close:hover { background: var(--border); }
 
     /* ═══════════════════════════════════════════
+       AGENT TAB
+    ═══════════════════════════════════════════ */
+    .agent-header {
+      padding: 14px 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-light);
+      background: var(--bg-card);
+    }
+    .agent-title { font-size: 16px; font-weight: 700; }
+    .agent-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .agent-credit {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--fid-green-bg);
+      color: var(--fid-green);
+      white-space: nowrap;
+    }
+    .agent-credit.low { background: rgba(230,126,34,.12); color: var(--warning); }
+    .agent-credit.out { background: var(--negative-bg); color: var(--negative); }
+    .agent-toolbar {
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .agent-btn {
+      flex: 1;
+      min-width: 110px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .agent-btn.primary { background: var(--fid-green); color: #fff; border-color: var(--fid-green); }
+    .agent-btn.primary:disabled { opacity: .5; cursor: not-allowed; }
+    .agent-btn:hover:not(:disabled) { border-color: var(--fid-green); }
+    .agent-chart-area {
+      margin: 12px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      min-height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+    .agent-chart-area.has-image { border-style: solid; }
+    .agent-chart-area .agent-chart-placeholder {
+      padding: 28px 18px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .agent-chart-area img {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      background: #000;
+    }
+    .agent-chart-area iframe { display: block; width: 100%; height: 320px; border: 0; }
+    .agent-chart-clear {
+      position: absolute;
+      top: 6px; right: 6px;
+      background: rgba(0,0,0,.55);
+      color: #fff;
+      border-radius: var(--radius-pill);
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      z-index: 2;
+    }
+    .agent-prompt-wrap {
+      margin: 0 12px 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+    .agent-prompt-wrap textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text-primary);
+      background: transparent;
+      min-height: 64px;
+    }
+    .agent-quick {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .agent-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .agent-chip:hover { border-color: var(--fid-green); color: var(--fid-green); }
+    .agent-send-row {
+      display: flex;
+      gap: 8px;
+      margin: 0 12px 12px;
+    }
+    .agent-send-row .agent-btn { flex: 1; }
+    .agent-msgs { padding: 0 12px 80px; }
+    .agent-msg {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .agent-msg.user {
+      background: var(--fid-green-bg);
+      border-color: var(--fid-green-bg-strong);
+    }
+    .agent-msg.error { border-color: var(--negative); color: var(--negative); }
+    .agent-msg-role {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .agent-msg.user .agent-msg-role { color: var(--fid-green); }
+    .agent-thinking {
+      display: flex; gap: 4px; padding: 4px 0;
+    }
+    .agent-thinking span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--fid-green);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .agent-thinking span:nth-child(2) { animation-delay: .15s; }
+    .agent-thinking span:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%,80%,100% { transform: scale(.5); opacity: .4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .agent-settings {
+      margin: 0 12px 12px;
+      padding: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .agent-settings label { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-size: 12px; }
+    .agent-settings input, .agent-settings select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+    .agent-settings .row { display: flex; gap: 8px; }
+    .agent-settings .row > div { flex: 1; }
+    .agent-settings .hint { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ═══════════════════════════════════════════
        RESPONSIVE — Desktop widening
     ═══════════════════════════════════════════ */
     @media (min-width: 768px) {
@@ -949,6 +1141,77 @@
     <div class="disclaimer-bar">⚠ Informational only — not financial advice</div>
   </div>
 
+  <!-- ── AGENT TAB ── -->
+  <div class="tab-view" id="tab-agent">
+    <div class="agent-header">
+      <div>
+        <div class="agent-title">Trading Agent</div>
+        <div class="agent-sub">Chart vision · trends · liquidity sweeps · news</div>
+      </div>
+      <div class="agent-credit" id="agentCredit">— left</div>
+    </div>
+
+    <div class="agent-toolbar">
+      <button class="agent-btn" onclick="document.getElementById('agentFile').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload chart
+      </button>
+      <button class="agent-btn" onclick="agentUseTradingView()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+        Use TradingView (<span id="agentSym">AAPL</span>)
+      </button>
+      <button class="agent-btn" onclick="agentClearImage()">Clear</button>
+      <input id="agentFile" type="file" accept="image/*" style="display:none" onchange="agentFileSelected(event)" />
+    </div>
+
+    <div class="agent-chart-area" id="agentChartArea">
+      <div class="agent-chart-placeholder">
+        Paste a chart screenshot (Cmd/Ctrl+V), upload an image, or load a TradingView chart of the current symbol — then ask the agent below.
+      </div>
+    </div>
+
+    <div class="agent-prompt-wrap">
+      <textarea id="agentPrompt" placeholder="Ask about trends, liquidity sweeps, support/resistance, news catalysts…"></textarea>
+      <div class="agent-quick">
+        <button class="agent-chip" onclick="agentQuick('Identify the current trend, key support/resistance, and any liquidity sweeps or stop-runs visible.')">Trend & sweeps</button>
+        <button class="agent-chip" onclick="agentQuick('Mark order blocks, fair value gaps, and likely liquidity targets above/below.')">Order blocks / FVG</button>
+        <button class="agent-chip" onclick="agentQuick('Summarize recent news and catalysts that could explain this price action.')">News & catalysts</button>
+        <button class="agent-chip" onclick="agentQuick('Give a concise trade idea with entry, stop, and target. Note the risk.')">Trade idea</button>
+      </div>
+    </div>
+
+    <div class="agent-send-row">
+      <button class="agent-btn primary" id="agentSendBtn" onclick="agentSend()">Analyze</button>
+    </div>
+
+    <div class="agent-msgs" id="agentMsgs"></div>
+
+    <div class="agent-settings" id="agentSettings">
+      <label for="agentKey">Anthropic API key <span style="font-weight:400;color:var(--text-muted);">(stored locally)</span></label>
+      <input id="agentKey" type="password" placeholder="sk-ant-…" />
+      <div class="row">
+        <div>
+          <label for="agentModel">Model</label>
+          <select id="agentModel">
+            <option value="claude-haiku-4-5-20251001">Haiku 4.5 (cheapest)</option>
+            <option value="claude-sonnet-4-6">Sonnet 4.6</option>
+            <option value="claude-opus-4-7">Opus 4.7 (priciest)</option>
+          </select>
+        </div>
+        <div>
+          <label for="agentDaily">Daily message cap</label>
+          <input id="agentDaily" type="number" min="1" max="500" value="25" />
+        </div>
+      </div>
+      <button class="agent-btn primary" onclick="agentSaveSettings()" style="width:100%;margin-top:4px;">Save settings</button>
+      <div class="hint" style="margin-top:8px;">
+        Cap limits how many agent calls/day to control credit usage. Image analysis uses extra tokens; Haiku 4.5 keeps cost minimal. Key never leaves your browser.
+      </div>
+    </div>
+
+    <div class="disclaimer-bar">⚠ AI output may be inaccurate — not financial advice</div>
+  </div>
+
 </div><!-- /app-body -->
 
 <!-- ═══════════════════════════════════════════
@@ -970,6 +1233,10 @@
   <div class="nav-item" onclick="switchTab('analysis',this)">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21H4.6c-.56 0-.84 0-1.05-.11a1 1 0 0 1-.44-.44C3 20.24 3 19.96 3 19.4V3"/><path d="m7 14 4-4 4 4 6-6"/></svg>
     <span>Analysis</span>
+  </div>
+  <div class="nav-item" onclick="switchTab('agent',this)">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 14 8l6 2-6 2-2 6-2-6-6-2 6-2z"/><circle cx="19" cy="19" r="2"/></svg>
+    <span>Agent</span>
   </div>
 </nav>
 
@@ -1146,6 +1413,8 @@ function loadQuote(sym) {
   renderChart(sym, pos);
   renderStats(sym, info);
   if (typeof updateRiskUI === 'function') updateRiskUI();
+  const agSym = document.getElementById('agentSym');
+  if (agSym) agSym.textContent = sym;
 }
 
 function generateSymInfo(sym) {
@@ -1772,8 +2041,238 @@ function resetRiskDay() {
 document.addEventListener('keydown', e => {
   if (e.key==='Enter' && document.activeElement===document.getElementById('symInput')) loadSymbol();
   if (e.key==='Enter' && document.activeElement===document.getElementById('analysisInput')) generateAnalysis();
+  if (e.key==='Enter' && !e.shiftKey && document.activeElement===document.getElementById('agentPrompt')) {
+    e.preventDefault();
+    agentSend();
+  }
   if (e.key==='Escape') closeModal();
 });
+
+// ═══════════════════════════════════════════
+// TRADING AGENT (Claude API · vision + news)
+// ═══════════════════════════════════════════
+const AGENT_LS = {
+  key: 'agent.apiKey',
+  model: 'agent.model',
+  daily: 'agent.dailyCap',
+  used: 'agent.used',
+  date: 'agent.date',
+};
+let agentImage = null;     // { kind:'image', mediaType, dataB64 }  or  null
+let agentTV = null;        // tradingview symbol if using embed (no image)
+let agentHistory = [];     // [{role, content}]
+
+function agentTodayKey() {
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function agentGetCap() {
+  return parseInt(localStorage.getItem(AGENT_LS.daily) || '25', 10);
+}
+function agentGetUsed() {
+  if (localStorage.getItem(AGENT_LS.date) !== agentTodayKey()) {
+    localStorage.setItem(AGENT_LS.date, agentTodayKey());
+    localStorage.setItem(AGENT_LS.used, '0');
+  }
+  return parseInt(localStorage.getItem(AGENT_LS.used) || '0', 10);
+}
+function agentBumpUsed() {
+  const u = agentGetUsed() + 1;
+  localStorage.setItem(AGENT_LS.used, String(u));
+  agentRenderCredit();
+}
+function agentRenderCredit() {
+  const cap = agentGetCap();
+  const used = agentGetUsed();
+  const left = Math.max(0, cap - used);
+  const el = document.getElementById('agentCredit');
+  el.textContent = left + ' / ' + cap + ' left';
+  el.classList.remove('low','out');
+  if (left === 0) el.classList.add('out');
+  else if (left <= Math.max(2, Math.floor(cap*0.2))) el.classList.add('low');
+  document.getElementById('agentSendBtn').disabled = (left === 0);
+}
+function agentSaveSettings() {
+  const k = document.getElementById('agentKey').value.trim();
+  const m = document.getElementById('agentModel').value;
+  const d = parseInt(document.getElementById('agentDaily').value, 10) || 25;
+  if (k) localStorage.setItem(AGENT_LS.key, k);
+  localStorage.setItem(AGENT_LS.model, m);
+  localStorage.setItem(AGENT_LS.daily, String(d));
+  agentRenderCredit();
+  agentPushMsg('assistant', 'Settings saved.');
+}
+function agentLoadSettings() {
+  const k = localStorage.getItem(AGENT_LS.key) || '';
+  const m = localStorage.getItem(AGENT_LS.model) || 'claude-haiku-4-5-20251001';
+  const d = localStorage.getItem(AGENT_LS.daily) || '25';
+  document.getElementById('agentKey').value = k;
+  document.getElementById('agentModel').value = m;
+  document.getElementById('agentDaily').value = d;
+}
+
+function agentClearImage() {
+  agentImage = null;
+  agentTV = null;
+  document.getElementById('agentChartArea').classList.remove('has-image');
+  document.getElementById('agentChartArea').innerHTML =
+    '<div class="agent-chart-placeholder">Paste a chart screenshot (Cmd/Ctrl+V), upload an image, or load a TradingView chart of the current symbol — then ask the agent below.</div>';
+}
+function agentShowImage(dataUrl) {
+  const area = document.getElementById('agentChartArea');
+  area.classList.add('has-image');
+  area.innerHTML = '<button class="agent-chart-clear" onclick="agentClearImage()">✕</button><img src="'+dataUrl+'" alt="chart" />';
+}
+function agentShowTV(sym) {
+  const area = document.getElementById('agentChartArea');
+  area.classList.add('has-image');
+  const tvSym = (SYMBOLS[sym] && SYMBOLS[sym].tvSym) || ('NASDAQ:'+sym);
+  const url = 'https://s.tradingview.com/widgetembed/?frameElementId=tv_agent&symbol='+encodeURIComponent(tvSym)+'&interval=D&theme=light&style=1&hide_side_toolbar=1&withdateranges=1';
+  area.innerHTML = '<button class="agent-chart-clear" onclick="agentClearImage()">✕</button><iframe src="'+url+'" allowtransparency="true"></iframe>';
+}
+
+function agentUseTradingView() {
+  agentImage = null;
+  agentTV = currentSym;
+  agentShowTV(currentSym);
+}
+
+function agentFileSelected(e) {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  agentLoadFile(f);
+  e.target.value = '';
+}
+function agentLoadFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+    if (!m) return;
+    agentTV = null;
+    agentImage = { mediaType: m[1], dataB64: m[2] };
+    agentShowImage(dataUrl);
+  };
+  reader.readAsDataURL(file);
+}
+
+// Paste support
+document.addEventListener('paste', e => {
+  if (!document.getElementById('tab-agent').classList.contains('active')) return;
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (const it of items) {
+    if (it.type && it.type.startsWith('image/')) {
+      const f = it.getAsFile();
+      if (f) { agentLoadFile(f); e.preventDefault(); return; }
+    }
+  }
+});
+
+function agentQuick(text) {
+  const ta = document.getElementById('agentPrompt');
+  ta.value = text;
+  ta.focus();
+}
+
+function agentPushMsg(role, text, isError) {
+  const wrap = document.createElement('div');
+  wrap.className = 'agent-msg ' + (role === 'user' ? 'user' : '') + (isError ? ' error' : '');
+  const r = document.createElement('div');
+  r.className = 'agent-msg-role';
+  r.textContent = role === 'user' ? 'You' : 'Agent';
+  wrap.appendChild(r);
+  const body = document.createElement('div');
+  body.textContent = text;
+  wrap.appendChild(body);
+  document.getElementById('agentMsgs').appendChild(wrap);
+  document.getElementById('appBody').scrollTop = document.getElementById('appBody').scrollHeight;
+  return wrap;
+}
+function agentPushThinking() {
+  const wrap = document.createElement('div');
+  wrap.className = 'agent-msg';
+  wrap.innerHTML = '<div class="agent-msg-role">Agent</div><div class="agent-thinking"><span></span><span></span><span></span></div>';
+  document.getElementById('agentMsgs').appendChild(wrap);
+  document.getElementById('appBody').scrollTop = document.getElementById('appBody').scrollHeight;
+  return wrap;
+}
+
+async function agentSend() {
+  const apiKey = localStorage.getItem(AGENT_LS.key);
+  if (!apiKey) { agentPushMsg('assistant', 'Add your Anthropic API key in Settings below to use the agent.', true); return; }
+
+  if (agentGetUsed() >= agentGetCap()) {
+    agentPushMsg('assistant', 'Daily message cap reached. Raise the cap in settings or wait until tomorrow.', true);
+    return;
+  }
+
+  const ta = document.getElementById('agentPrompt');
+  const userText = ta.value.trim();
+  if (!userText && !agentImage) { ta.focus(); return; }
+
+  const sym = currentSym || 'AAPL';
+  const info = SYMBOLS[sym] || generateSymInfo(sym);
+  const ctx = `Symbol: ${sym} (${info.name}) on ${info.exch}. Last ~${info.price.toFixed(2)} (${info.chg>=0?'+':''}${info.chg.toFixed(2)} / ${info.pct.toFixed(2)}%).`;
+
+  const userBlocks = [];
+  if (agentImage) {
+    userBlocks.push({
+      type: 'image',
+      source: { type: 'base64', media_type: agentImage.mediaType, data: agentImage.dataB64 }
+    });
+  } else if (agentTV) {
+    userBlocks.push({ type: 'text', text: `(No screenshot attached — analyzing ${agentTV} based on the embedded TradingView chart context.)` });
+  }
+  const promptText = (userText || 'Analyze this chart for trends, liquidity sweeps, key levels, and relevant news/catalysts.') + `\n\nContext: ${ctx}`;
+  userBlocks.push({ type: 'text', text: promptText });
+
+  agentPushMsg('user', userText || '(analyze chart)');
+  ta.value = '';
+  const thinking = agentPushThinking();
+  document.getElementById('agentSendBtn').disabled = true;
+
+  agentHistory.push({ role: 'user', content: userBlocks });
+
+  const model = localStorage.getItem(AGENT_LS.model) || 'claude-haiku-4-5-20251001';
+  const system = 'You are a concise trading assistant. When given a chart image, identify: trend direction, key support/resistance, liquidity sweeps / stop-runs, order blocks, fair value gaps, and probable next move. Reference recent macro/company news catalysts when relevant from your knowledge. Be specific but brief — bullets preferred. Always end with: "Not financial advice."';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: model,
+        max_tokens: 700,
+        system: system,
+        messages: agentHistory,
+      }),
+    });
+    const data = await res.json();
+    thinking.remove();
+    if (!res.ok) {
+      const msg = (data && data.error && data.error.message) || ('HTTP '+res.status);
+      agentPushMsg('assistant', 'Error: ' + msg, true);
+      agentHistory.pop();
+    } else {
+      const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim() || '(empty response)';
+      agentHistory.push({ role: 'assistant', content: [{ type: 'text', text }] });
+      agentPushMsg('assistant', text);
+      agentBumpUsed();
+    }
+  } catch (err) {
+    thinking.remove();
+    agentPushMsg('assistant', 'Network error: ' + err.message, true);
+    agentHistory.pop();
+  } finally {
+    agentRenderCredit();
+  }
+}
 
 // ─── INIT ────────────────────────────────
 (function init() {
@@ -1786,6 +2285,8 @@ document.addEventListener('keydown', e => {
   // Set analysis input
   document.getElementById('analysisInput').value = 'AAPL';
   updateRiskUI();
+  agentLoadSettings();
+  agentRenderCredit();
 })();
 </script>
 </body>
