@@ -1,9 +1,3 @@
 {
-  "routes": [
-    {
-      "src": "^/(?!.*\\.).*$",
-      "dest": "/index.html"
-    }
-  ],
-  "buildCommand": "echo 'Static site, no build needed'"
+  "outputDirectory": "."
 }
