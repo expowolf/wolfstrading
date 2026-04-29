@@ -202,8 +202,115 @@
       padding: 24px 24px 80px;
       scroll-behavior: smooth;
     }
-    .tab-view { display: none; }
-    .tab-view.active { display: block; }
+    .tab-view { display: none; opacity: 0; }
+    .tab-view.active { display: block; animation: tabFade .25s ease-out forwards; }
+    @keyframes tabFade {
+      0% { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .nav-item, .agent-btn, .agent-chip, .period-btn, .action-btn, .news-tab-btn, .mkt-card, .wl-item {
+      transition: background .18s ease, color .18s ease, border-color .18s ease,
+                  box-shadow .18s ease, transform .12s ease, opacity .18s ease;
+    }
+    .agent-btn:active:not(:disabled), .action-btn:active, .period-btn:active { transform: translateY(1px) scale(.98); }
+    .mkt-card:hover { transform: translateY(-2px); }
+
+    /* ═══════════════════════════════════════════
+       TOAST NOTIFICATIONS
+    ═══════════════════════════════════════════ */
+    #toastWrap {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 9500;
+      display: flex; flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      min-width: 260px; max-width: 380px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.5), 0 0 30px rgba(0,229,255,.08);
+      color: var(--text-primary);
+      font-size: 13px;
+      line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 10px;
+      animation: toastIn .25s cubic-bezier(.2,.9,.3,1.2);
+    }
+    .toast.leave { animation: toastOut .2s ease-in forwards; }
+    .toast.success { border-left-color: var(--positive); }
+    .toast.error { border-left-color: var(--negative); }
+    .toast.warn { border-left-color: var(--warning); }
+    .toast .toast-icon { flex-shrink: 0; font-size: 16px; line-height: 1; margin-top: 1px; }
+    .toast .toast-msg { flex: 1; }
+    .toast .toast-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+    .toast .toast-sub { color: var(--text-secondary); font-size: 12px; }
+    @keyframes toastIn {
+      0% { opacity: 0; transform: translateX(40px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes toastOut {
+      0% { opacity: 1; transform: translateX(0); }
+      100% { opacity: 0; transform: translateX(40px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       AGENT ATTACHMENT CHIPS
+    ═══════════════════════════════════════════ */
+    .agent-attachments {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 10px 18px 0;
+    }
+    .agent-attach-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px 6px 8px;
+      background: rgba(0,229,255,.08);
+      border: 1px solid rgba(0,229,255,.3);
+      border-radius: 18px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      animation: msgIn .25s ease-out;
+      max-width: 280px;
+    }
+    .agent-attach-chip .chip-ico {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      background: rgba(0,229,255,.2);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+      color: var(--accent);
+    }
+    .agent-attach-chip .chip-name {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .agent-attach-chip .chip-x {
+      cursor: pointer;
+      padding: 0 4px;
+      color: var(--text-muted);
+      font-weight: 700;
+      transition: color .15s;
+    }
+    .agent-attach-chip .chip-x:hover { color: var(--negative); }
+    .agent-attach-chip.processing { opacity: .65; }
+    .agent-attach-chip.processing .chip-ico::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      border-top-color: transparent;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .agent-attach-chip.error { background: rgba(255,77,94,.1); border-color: var(--negative); color: var(--negative); }
+    .agent-attach-chip.error .chip-ico { background: rgba(255,77,94,.2); color: var(--negative); }
 
     /* ═══════════════════════════════════════════
        HOME TAB
@@ -832,22 +939,26 @@
         0 30px 80px rgba(0,0,0,.5),
         0 0 60px rgba(0,229,255,.08);
     }
-    /* Animated scanline overlay */
+    /* Animated scanline overlay — GPU-accelerated transform */
     .agent-shell::before {
       content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,229,255,.04) 50%, transparent 100%);
-      background-size: 100% 8px;
+      position: absolute;
+      left: 0; right: 0;
+      top: -2px;
+      height: 60px;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,229,255,.12) 50%, transparent 100%);
       pointer-events: none;
       animation: scan 6s linear infinite;
-      opacity: .35;
+      will-change: transform;
       z-index: 1;
     }
     @keyframes scan {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 100vh; }
+      0% { transform: translateY(0); opacity: 0; }
+      8% { opacity: 1; }
+      92% { opacity: 1; }
+      100% { transform: translateY(800px); opacity: 0; }
     }
-    /* Animated grid */
+    /* Static grid (no animation — removes constant repaint) */
     .agent-shell::after {
       content: '';
       position: absolute; inset: 0;
@@ -886,29 +997,37 @@
         0 0 30px rgba(0,229,255,.6),
         0 0 60px rgba(108,92,231,.35),
         inset 0 0 20px rgba(255,255,255,.15);
-      animation: orbPulse 3s ease-in-out infinite;
+      animation: orbPulse 3.6s ease-in-out infinite;
+      will-change: transform;
+      transform: translateZ(0);
     }
     .agent-orb::before, .agent-orb::after {
       content: '';
       position: absolute; inset: -8px;
       border-radius: 50%;
       border: 1px solid rgba(0,229,255,.4);
-      animation: orbRing 3s linear infinite;
+      animation: orbRing 5s linear infinite;
+      will-change: transform;
     }
     .agent-orb::after {
       inset: -16px;
       border-color: rgba(108,92,231,.3);
-      animation-duration: 4.5s;
+      animation-duration: 7s;
       animation-direction: reverse;
     }
     @keyframes orbPulse {
-      0%,100% { transform: scale(1); filter: brightness(1); }
-      50% { transform: scale(1.05); filter: brightness(1.15); }
+      0%,100% { transform: scale(1) translateZ(0); }
+      50% { transform: scale(1.04) translateZ(0); }
     }
     @keyframes orbRing {
-      0% { transform: rotate(0); opacity: .6; }
-      50% { opacity: 1; }
-      100% { transform: rotate(360deg); opacity: .6; }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .agent-shell::before, .agent-orb, .agent-orb::before, .agent-orb::after,
+      .agent-msg.assistant::before, .market-dot, .agent-status-pill .dot {
+        animation: none !important;
+      }
     }
     .agent-title-block .agent-title {
       font-size: 22px;
@@ -1130,19 +1249,9 @@
       background: rgba(45,184,77,.05);
       border-color: rgba(45,184,77,.3);
     }
-    .agent-msg.assistant { border-left: 3px solid var(--accent); }
-    .agent-msg.assistant::before {
-      content: '';
-      position: absolute;
-      left: -1px; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--accent);
-      box-shadow: 0 0 12px var(--accent);
-      animation: msgGlow 2s ease-in-out infinite;
-    }
-    @keyframes msgGlow {
-      0%,100% { opacity: .6; }
-      50% { opacity: 1; }
+    .agent-msg.assistant {
+      border-left: 3px solid var(--accent);
+      box-shadow: -3px 0 12px -3px rgba(0,229,255,.4);
     }
     .agent-msg.error { border-color: var(--negative); color: var(--negative); }
     .agent-msg-role {
@@ -1538,25 +1647,31 @@
       </div>
 
       <div class="agent-toolbar">
-        <button class="agent-btn" onclick="document.getElementById('agentFile').click()">
+        <button class="agent-btn" onclick="document.getElementById('agentFile').click()" title="Upload image, PDF, or video">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Upload chart
+          Upload
         </button>
-        <button class="agent-btn" onclick="agentUseTradingView()">
+        <button class="agent-btn" onclick="agentUseTradingView()" title="Use the embedded TradingView chart">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
           TradingView (<span id="agentSym">AAPL</span>)
         </button>
-        <button class="agent-btn" onclick="openFullscreen(agentTV || currentSym)">
+        <button class="agent-btn" onclick="agentAddLink()" title="Attach a URL — NotebookLM, article, research note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Add link
+        </button>
+        <button class="agent-btn" onclick="openFullscreen(agentTV || currentSym)" title="Open chart fullscreen">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           Fullscreen
         </button>
-        <button class="agent-btn" onclick="agentClearImage()">Clear</button>
-        <input id="agentFile" type="file" accept="image/*" style="display:none" onchange="agentFileSelected(event)" />
+        <button class="agent-btn" onclick="agentClearAll()" title="Clear all attachments">Clear</button>
+        <input id="agentFile" type="file" accept="image/*,application/pdf,video/*" multiple style="display:none" onchange="agentFilesSelected(event)" />
       </div>
+
+      <div class="agent-attachments" id="agentAttachments"></div>
 
       <div class="agent-chart-area" id="agentChartArea">
         <div class="agent-chart-placeholder">
-          <strong>Paste</strong> a chart screenshot (Cmd/Ctrl+V), <strong>upload</strong> an image, or load a <strong>TradingView</strong> chart of the current symbol — then ask the agent below.
+          <strong>Paste</strong> a screenshot (Cmd/Ctrl+V), <strong>upload</strong> images / PDFs / videos, attach a <strong>NotebookLM</strong> or article link, or load a <strong>TradingView</strong> chart of the current symbol — then ask the agent below.
         </div>
       </div>
 
@@ -1597,9 +1712,23 @@
             <input id="agentDaily" type="number" min="1" max="500" value="25" />
           </div>
         </div>
+        <div class="row">
+          <div>
+            <label for="agentMaxTokens">Max reply tokens</label>
+            <input id="agentMaxTokens" type="number" min="200" max="4000" step="100" value="600" />
+          </div>
+          <div>
+            <label for="agentImgQ">Image quality</label>
+            <select id="agentImgQ">
+              <option value="low">Low (cheap · 768px)</option>
+              <option value="med" selected>Medium (1280px)</option>
+              <option value="high">High (1920px)</option>
+            </select>
+          </div>
+        </div>
         <button class="agent-btn primary" onclick="agentSaveSettings()" style="width:100%;margin-top:4px;">Save settings</button>
         <div class="hint" style="margin-top:10px;">
-          Daily cap limits agent calls to control credit usage. Image analysis uses more tokens — Haiku 4.5 keeps cost minimal. Key never leaves your browser.
+          <strong style="color:var(--accent);">Per-request limits:</strong> Max-tokens caps reply length, image quality controls upload size. Lower = fewer credits per call. Daily cap throttles total usage. Haiku 4.5 + medium images is a good balance.
         </div>
       </div>
 
@@ -1609,6 +1738,8 @@
   </div>
 
 </div><!-- /app-body -->
+
+<div id="toastWrap"></div>
 
 <!-- legacy bottom nav removed — moved into header -->
 <nav class="bottom-nav" style="display:none">
@@ -2008,9 +2139,11 @@ function toggleWatch() {
     btn.style.background = 'var(--fid-green-bg)';
     btn.style.color = 'var(--fid-green)';
     btn.style.borderColor = 'var(--fid-green)';
+    showToast('Added to watchlist', currentSym, 'success');
   } else {
     btn.textContent = '+ Watch';
     btn.style.background = 'transparent';
+    showToast('Removed from watchlist', currentSym, 'info');
   }
 }
 
@@ -2331,13 +2464,13 @@ function executeTrade(side) {
   if (gate.blocked) {
     logTrade('BLOCKED', sym, 0, price, gate.reason);
     updateRiskUI();
-    alert('⛔ Trade blocked: ' + gate.reason);
+    showToast('Trade blocked', gate.reason, 'error');
     return;
   }
 
   const sizing = calcPositionSize(price);
   if (sizing.shares < 1) {
-    alert('Position size too small — increase balance or risk %.');
+    showToast('Position too small', 'Increase balance or risk %.', 'warn');
     return;
   }
 
@@ -2390,6 +2523,11 @@ function executeTrade(side) {
 
   logTrade(side, sym, sizing.shares, price, `${result} ${pnl>=0?'+':''}$${pnl.toFixed(2)} | SL: $${sizing.slPrice.toFixed(2)} TP: $${sizing.tpPrice.toFixed(2)}`);
   updateRiskUI();
+  showToast(
+    side + ' ' + sym + ' · ' + result,
+    sizing.shares + ' sh @ $' + price.toFixed(2) + ' · ' + (pnl>=0?'+':'') + '$' + pnl.toFixed(2),
+    pnl >= 0 ? 'success' : 'error'
+  );
 }
 
 function logTrade(action, sym, shares, price, detail) {
@@ -2477,7 +2615,30 @@ document.addEventListener('keydown', e => {
 });
 
 // ═══════════════════════════════════════════
-// TRADING AGENT (Claude API · vision + news)
+// TOAST NOTIFICATIONS
+// ═══════════════════════════════════════════
+function showToast(title, sub, kind, ms) {
+  kind = kind || 'info';
+  ms = ms || 3500;
+  const wrap = document.getElementById('toastWrap');
+  if (!wrap) return;
+  const t = document.createElement('div');
+  t.className = 'toast ' + kind;
+  const ico = kind === 'success' ? '✓' : kind === 'error' ? '⚠' : kind === 'warn' ? '!' : 'i';
+  t.innerHTML = '<div class="toast-icon">' + ico + '</div>'
+    + '<div class="toast-msg">'
+    + '<div class="toast-title">' + esc(title || '') + '</div>'
+    + (sub ? '<div class="toast-sub">' + esc(sub) + '</div>' : '')
+    + '</div>';
+  wrap.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('leave');
+    setTimeout(() => t.remove(), 220);
+  }, ms);
+}
+
+// ═══════════════════════════════════════════
+// TRADING AGENT (Claude API · multi-modal)
 // ═══════════════════════════════════════════
 const AGENT_LS = {
   key: 'agent.apiKey',
@@ -2485,17 +2646,29 @@ const AGENT_LS = {
   daily: 'agent.dailyCap',
   used: 'agent.used',
   date: 'agent.date',
+  maxTok: 'agent.maxTokens',
+  imgQ: 'agent.imgQuality',
 };
-let agentImage = null;     // { kind:'image', mediaType, dataB64 }  or  null
-let agentTV = null;        // tradingview symbol if using embed (no image)
-let agentHistory = [];     // [{role, content}]
+// attachments: array of { id, kind, name, mediaType, dataB64?, text?, frames? }
+//   kind: 'image' | 'pdf' | 'video' | 'link' | 'tradingview'
+let agentAttachments = [];
+let agentTV = null;            // legacy alias used by Fullscreen button
+let agentHistory = [];
+
+function agentUid() { return 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
 function agentTodayKey() {
   const d = new Date();
   return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 }
-function agentGetCap() {
-  return parseInt(localStorage.getItem(AGENT_LS.daily) || '25', 10);
+function agentGetCap() { return parseInt(localStorage.getItem(AGENT_LS.daily) || '25', 10); }
+function agentGetMaxTokens() {
+  const v = parseInt(localStorage.getItem(AGENT_LS.maxTok) || '600', 10);
+  return Math.min(4000, Math.max(200, v));
+}
+function agentGetImgQ() { return localStorage.getItem(AGENT_LS.imgQ) || 'med'; }
+function agentImgMaxDim() {
+  return ({ low: 768, med: 1280, high: 1920 })[agentGetImgQ()] || 1280;
 }
 function agentGetUsed() {
   if (localStorage.getItem(AGENT_LS.date) !== agentTodayKey()) {
@@ -2514,77 +2687,269 @@ function agentRenderCredit() {
   const used = agentGetUsed();
   const left = Math.max(0, cap - used);
   const el = document.getElementById('agentCredit');
+  if (!el) return;
   el.textContent = left + ' / ' + cap + ' left';
   el.classList.remove('low','out');
   if (left === 0) el.classList.add('out');
   else if (left <= Math.max(2, Math.floor(cap*0.2))) el.classList.add('low');
-  document.getElementById('agentSendBtn').disabled = (left === 0);
+  const btn = document.getElementById('agentSendBtn');
+  if (btn) btn.disabled = (left === 0);
 }
 function agentSaveSettings() {
   const k = document.getElementById('agentKey').value.trim();
   const m = document.getElementById('agentModel').value;
   const d = parseInt(document.getElementById('agentDaily').value, 10) || 25;
+  const mt = parseInt(document.getElementById('agentMaxTokens').value, 10) || 600;
+  const iq = document.getElementById('agentImgQ').value;
   if (k) localStorage.setItem(AGENT_LS.key, k);
   localStorage.setItem(AGENT_LS.model, m);
   localStorage.setItem(AGENT_LS.daily, String(d));
+  localStorage.setItem(AGENT_LS.maxTok, String(Math.min(4000, Math.max(200, mt))));
+  localStorage.setItem(AGENT_LS.imgQ, iq);
   agentRenderCredit();
-  agentPushMsg('assistant', 'Settings saved.');
+  showToast('Settings saved', 'Daily cap: ' + d + ' · Max tokens: ' + mt + ' · Image: ' + iq, 'success');
 }
 function agentLoadSettings() {
-  const k = localStorage.getItem(AGENT_LS.key) || '';
-  const m = localStorage.getItem(AGENT_LS.model) || 'claude-haiku-4-5-20251001';
-  const d = localStorage.getItem(AGENT_LS.daily) || '25';
-  document.getElementById('agentKey').value = k;
-  document.getElementById('agentModel').value = m;
-  document.getElementById('agentDaily').value = d;
+  document.getElementById('agentKey').value     = localStorage.getItem(AGENT_LS.key) || '';
+  document.getElementById('agentModel').value   = localStorage.getItem(AGENT_LS.model) || 'claude-haiku-4-5-20251001';
+  document.getElementById('agentDaily').value   = localStorage.getItem(AGENT_LS.daily) || '25';
+  document.getElementById('agentMaxTokens').value = localStorage.getItem(AGENT_LS.maxTok) || '600';
+  document.getElementById('agentImgQ').value    = localStorage.getItem(AGENT_LS.imgQ)  || 'med';
 }
 
-function agentClearImage() {
-  agentImage = null;
-  agentTV = null;
-  document.getElementById('agentChartArea').classList.remove('has-image');
-  document.getElementById('agentChartArea').innerHTML =
-    '<div class="agent-chart-placeholder">Paste a chart screenshot (Cmd/Ctrl+V), upload an image, or load a TradingView chart of the current symbol — then ask the agent below.</div>';
+// ─── Attachment chip rendering ────────────
+function agentRenderAttachments() {
+  const wrap = document.getElementById('agentAttachments');
+  if (!wrap) return;
+  if (!agentAttachments.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = agentAttachments.map(a => {
+    const ico = a.kind === 'image' ? 'IMG' : a.kind === 'pdf' ? 'PDF'
+            : a.kind === 'video' ? 'VID' : a.kind === 'link' ? 'URL' : 'TV';
+    const cls = a.processing ? ' processing' : (a.error ? ' error' : '');
+    return '<span class="agent-attach-chip' + cls + '" data-id="' + a.id + '">'
+      + '<span class="chip-ico">' + (a.processing ? '' : ico) + '</span>'
+      + '<span class="chip-name" title="' + esc(a.name || '') + '">' + esc(a.name || '') + '</span>'
+      + '<span class="chip-x" onclick="agentRemoveAttachment(\'' + a.id + '\')">✕</span>'
+      + '</span>';
+  }).join('');
 }
-function agentShowImage(dataUrl) {
+function agentRemoveAttachment(id) {
+  const a = agentAttachments.find(x => x.id === id);
+  agentAttachments = agentAttachments.filter(x => x.id !== id);
+  if (a && a.kind === 'tradingview') { agentTV = null; agentClearChart(); }
+  agentRenderAttachments();
+}
+function agentClearAll() {
+  agentAttachments = [];
+  agentTV = null;
+  agentClearChart();
+  agentRenderAttachments();
+}
+function agentClearChart() {
+  const area = document.getElementById('agentChartArea');
+  area.classList.remove('has-image');
+  area.innerHTML =
+    '<div class="agent-chart-placeholder"><strong>Paste</strong> a screenshot, <strong>upload</strong> images / PDFs / videos, attach a <strong>NotebookLM</strong> link, or load a <strong>TradingView</strong> chart of the current symbol — then ask the agent below.</div>';
+}
+// Backwards-compat (called from Clear button if present elsewhere)
+function agentClearImage() { agentClearAll(); }
+
+// ─── Chart-area preview (image / iframe) ──
+function agentShowImagePreview(dataUrl) {
   const area = document.getElementById('agentChartArea');
   area.classList.add('has-image');
-  area.innerHTML = '<button class="agent-chart-clear" onclick="agentClearImage()">✕</button><img src="'+dataUrl+'" alt="chart" />';
+  area.innerHTML = '<button class="agent-chart-clear" onclick="agentClearAll()">✕</button><img src="'+dataUrl+'" alt="attachment" />';
 }
 function agentShowTV(sym) {
   const area = document.getElementById('agentChartArea');
   area.classList.add('has-image');
   const tvSym = (SYMBOLS[sym] && SYMBOLS[sym].tvSym) || ('NASDAQ:'+sym);
-  const url = 'https://s.tradingview.com/widgetembed/?frameElementId=tv_agent&symbol='+encodeURIComponent(tvSym)+'&interval=D&theme=light&style=1&hide_side_toolbar=1&withdateranges=1';
-  area.innerHTML = '<button class="agent-chart-clear" onclick="agentClearImage()">✕</button><iframe src="'+url+'" allowtransparency="true"></iframe>';
+  const url = 'https://s.tradingview.com/widgetembed/?frameElementId=tv_agent&symbol='+encodeURIComponent(tvSym)+'&interval=D&theme=dark&style=1&hide_side_toolbar=0&withdateranges=1&allow_symbol_change=1';
+  area.innerHTML = '<button class="agent-chart-clear" onclick="agentClearAll()">✕</button><iframe src="'+url+'" allowtransparency="true"></iframe>';
 }
-
 function agentUseTradingView() {
-  agentImage = null;
+  agentAttachments = agentAttachments.filter(a => a.kind !== 'tradingview');
   agentTV = currentSym;
+  agentAttachments.push({ id: agentUid(), kind: 'tradingview', name: 'TradingView · ' + currentSym });
   agentShowTV(currentSym);
+  agentRenderAttachments();
 }
 
-function agentFileSelected(e) {
-  const f = e.target.files && e.target.files[0];
-  if (!f) return;
-  agentLoadFile(f);
+// ─── Image compression (canvas resize → JPEG) ──
+function agentCompressImage(dataUrl, maxDim, quality) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width: w, height: h } = img;
+      const m = Math.max(w, h);
+      if (m > maxDim) { const r = maxDim / m; w = Math.round(w*r); h = Math.round(h*r); }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const out = canvas.toDataURL('image/jpeg', quality || 0.82);
+      resolve(out);
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+function dataUrlToB64(dataUrl) {
+  const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+  return m ? { mediaType: m[1], dataB64: m[2] } : null;
+}
+function readAsDataUrl(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ─── Main file router ─────────────────────
+async function agentFilesSelected(e) {
+  const files = Array.from(e.target.files || []);
   e.target.value = '';
+  for (const f of files) await agentLoadFile(f);
 }
-function agentLoadFile(file) {
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const dataUrl = ev.target.result;
-    const m = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
-    if (!m) return;
-    agentTV = null;
-    agentImage = { mediaType: m[1], dataB64: m[2] };
-    agentShowImage(dataUrl);
-  };
-  reader.readAsDataURL(file);
+async function agentLoadFile(file) {
+  if (!file) return;
+  const id = agentUid();
+  const baseName = file.name || (file.type.split('/')[0] + ' attachment');
+  if (file.type.startsWith('image/')) {
+    const att = { id, kind: 'image', name: baseName, processing: true };
+    agentAttachments.push(att); agentRenderAttachments();
+    try {
+      const orig = await readAsDataUrl(file);
+      const compressed = await agentCompressImage(orig, agentImgMaxDim(), 0.82);
+      const parts = dataUrlToB64(compressed);
+      if (!parts) throw new Error('encode failed');
+      att.mediaType = parts.mediaType;
+      att.dataB64 = parts.dataB64;
+      att.processing = false;
+      agentShowImagePreview(compressed);
+      agentRenderAttachments();
+    } catch (err) {
+      att.error = true; att.processing = false; att.name = 'Image error';
+      agentRenderAttachments();
+      showToast('Image failed', err.message || String(err), 'error');
+    }
+    return;
+  }
+  if (file.type === 'application/pdf') {
+    const att = { id, kind: 'pdf', name: baseName, processing: true };
+    agentAttachments.push(att); agentRenderAttachments();
+    try {
+      const url = await readAsDataUrl(file);
+      const parts = dataUrlToB64(url);
+      if (!parts) throw new Error('encode failed');
+      // Anthropic supports PDFs natively for capable models
+      att.mediaType = 'application/pdf';
+      att.dataB64 = parts.dataB64;
+      att.processing = false;
+      agentRenderAttachments();
+      showToast('PDF attached', baseName + ' · ' + Math.round(file.size/1024) + ' KB', 'success');
+    } catch (err) {
+      att.error = true; att.processing = false;
+      agentRenderAttachments();
+      showToast('PDF failed', err.message || String(err), 'error');
+    }
+    return;
+  }
+  if (file.type.startsWith('video/')) {
+    const att = { id, kind: 'video', name: baseName, processing: true, frames: [] };
+    agentAttachments.push(att); agentRenderAttachments();
+    try {
+      const frames = await agentExtractVideoFrames(file, 4, agentImgMaxDim());
+      att.frames = frames;
+      att.processing = false;
+      agentRenderAttachments();
+      // Preview first frame
+      if (frames[0]) agentShowImagePreview('data:' + frames[0].mediaType + ';base64,' + frames[0].dataB64);
+      showToast('Video processed', frames.length + ' frames extracted', 'success');
+    } catch (err) {
+      att.error = true; att.processing = false;
+      agentRenderAttachments();
+      showToast('Video failed', err.message || String(err), 'error');
+    }
+    return;
+  }
+  showToast('Unsupported file', file.type || 'unknown type', 'warn');
 }
 
-// Paste support
+// ─── Video frame sampler ─────────────────
+function agentExtractVideoFrames(file, count, maxDim) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement('video');
+    video.preload = 'auto';
+    video.muted = true;
+    video.playsInline = true;
+    video.src = url;
+    const frames = [];
+    let times = [];
+    video.addEventListener('loadedmetadata', () => {
+      const dur = isFinite(video.duration) ? video.duration : 0;
+      if (dur > 0) {
+        // Sample evenly: skip very start (0.5s), spread to end-0.5s
+        const start = Math.min(0.5, dur * 0.1);
+        const end = Math.max(start, dur - 0.3);
+        for (let i = 0; i < count; i++) {
+          times.push(start + ((end - start) * i) / Math.max(1, count - 1));
+        }
+      } else {
+        times = [0];
+      }
+      next();
+    });
+    video.addEventListener('error', () => { URL.revokeObjectURL(url); reject(new Error('Could not decode video')); });
+    let ti = 0;
+    function next() {
+      if (ti >= times.length) {
+        URL.revokeObjectURL(url);
+        return resolve(frames);
+      }
+      video.currentTime = times[ti++];
+    }
+    video.addEventListener('seeked', () => {
+      try {
+        const w0 = video.videoWidth, h0 = video.videoHeight;
+        let w = w0, h = h0;
+        const m = Math.max(w, h);
+        if (m > maxDim) { const r = maxDim / m; w = Math.round(w*r); h = Math.round(h*r); }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+        const parts = dataUrlToB64(dataUrl);
+        if (parts) frames.push(parts);
+      } catch (e) { /* skip frame */ }
+      next();
+    });
+  });
+}
+
+// ─── URL / NotebookLM link attachment ────
+function agentAddLink() {
+  const url = (prompt('Paste any URL (NotebookLM share, article, research note, video URL):') || '').trim();
+  if (!url) return;
+  if (!/^https?:\/\//i.test(url)) {
+    showToast('Invalid URL', 'Must start with http:// or https://', 'error');
+    return;
+  }
+  let label = url;
+  try { label = new URL(url).hostname.replace(/^www\./, '') + new URL(url).pathname.slice(0, 24); } catch(_) {}
+  agentAttachments.push({
+    id: agentUid(), kind: 'link', name: label,
+    text: 'Reference URL: ' + url + '\n\nNote: I cannot fetch this URL — describe relevant content from it in your prompt, or paste excerpts.'
+  });
+  agentRenderAttachments();
+  showToast('Link attached', url, 'success');
+}
+
+// ─── Paste support (images & text) ───────
 document.addEventListener('paste', e => {
   if (!document.getElementById('tab-agent').classList.contains('active')) return;
   const items = e.clipboardData && e.clipboardData.items;
@@ -2595,6 +2960,7 @@ document.addEventListener('paste', e => {
       if (f) { agentLoadFile(f); e.preventDefault(); return; }
     }
   }
+  // If a URL was pasted into prompt, leave it alone — user can also use Add link
 });
 
 function agentQuick(text) {
@@ -2624,22 +2990,25 @@ function agentPushMsg(role, text, isError) {
 }
 function typewriter(el, text) {
   el.textContent = '';
+  const textNode = document.createTextNode('');
   const cursor = document.createElement('span');
   cursor.className = 'typewriter-cursor';
+  el.appendChild(textNode);
   el.appendChild(cursor);
-  let i = 0;
+  // rAF-driven typewriter — smooth and skippable on click.
   const total = text.length;
-  // Tune speed: ~600 chars/sec for fluid sci-fi feel; faster for very long replies.
-  const stepMs = total > 1200 ? 4 : total > 600 ? 8 : 12;
-  const charsPerStep = total > 1200 ? 4 : total > 600 ? 2 : 1;
+  // ~24 chars / frame for long, ~6 for short → smooth at 60fps without frame storms.
+  const cps = total > 1500 ? 32 : total > 700 ? 16 : total > 250 ? 8 : 5;
+  let i = 0, raf = null;
+  const skip = () => { i = total; textNode.data = text; cursor.remove(); el.removeEventListener('click', skip); cancelAnimationFrame(raf); };
+  el.addEventListener('click', skip);
   const tick = () => {
-    if (i >= total) { cursor.remove(); return; }
-    const next = text.slice(i, i + charsPerStep);
-    cursor.before(document.createTextNode(next));
-    i += charsPerStep;
-    setTimeout(tick, stepMs);
+    i = Math.min(total, i + cps);
+    textNode.data = text.slice(0, i);
+    if (i >= total) { cursor.remove(); el.removeEventListener('click', skip); return; }
+    raf = requestAnimationFrame(tick);
   };
-  tick();
+  raf = requestAnimationFrame(tick);
 }
 function agentPushThinking() {
   const wrap = document.createElement('div');
@@ -2657,34 +3026,63 @@ function agentPushThinking() {
 
 async function agentSend() {
   const apiKey = localStorage.getItem(AGENT_LS.key);
-  if (!apiKey) { agentPushMsg('assistant', 'Add your Anthropic API key in Settings below to use the agent.', true); return; }
+  if (!apiKey) { showToast('No API key', 'Add your Anthropic API key in Settings below.', 'error'); return; }
 
   if (agentGetUsed() >= agentGetCap()) {
-    agentPushMsg('assistant', 'Daily message cap reached. Raise the cap in settings or wait until tomorrow.', true);
+    showToast('Daily cap reached', 'Raise the cap in settings or wait until tomorrow.', 'warn');
     return;
   }
 
   const ta = document.getElementById('agentPrompt');
   const userText = ta.value.trim();
-  if (!userText && !agentImage) { ta.focus(); return; }
+  const haveAttachment = agentAttachments.length > 0;
+  if (!userText && !haveAttachment) { ta.focus(); return; }
+
+  // Block send while any attachment is still processing (e.g. video frame extract)
+  if (agentAttachments.some(a => a.processing)) {
+    showToast('Still processing', 'Waiting for attachment to finish encoding…', 'warn');
+    return;
+  }
 
   const sym = currentSym || 'AAPL';
   const info = SYMBOLS[sym] || generateSymInfo(sym);
   const ctx = `Symbol: ${sym} (${info.name}) on ${info.exch}. Last ~${info.price.toFixed(2)} (${info.chg>=0?'+':''}${info.chg.toFixed(2)} / ${info.pct.toFixed(2)}%).`;
 
+  // Build content blocks from attachments
   const userBlocks = [];
-  if (agentImage) {
-    userBlocks.push({
-      type: 'image',
-      source: { type: 'base64', media_type: agentImage.mediaType, data: agentImage.dataB64 }
-    });
-  } else if (agentTV) {
-    userBlocks.push({ type: 'text', text: `(No screenshot attached — analyzing ${agentTV} based on the embedded TradingView chart context.)` });
+  const summaryParts = [];
+  for (const a of agentAttachments) {
+    if (a.error) continue;
+    if (a.kind === 'image' && a.dataB64) {
+      userBlocks.push({ type: 'image', source: { type: 'base64', media_type: a.mediaType, data: a.dataB64 } });
+      summaryParts.push('image:' + (a.name || ''));
+    } else if (a.kind === 'pdf' && a.dataB64) {
+      userBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: a.dataB64 } });
+      summaryParts.push('pdf:' + (a.name || ''));
+    } else if (a.kind === 'video' && a.frames && a.frames.length) {
+      userBlocks.push({ type: 'text', text: `[Video sample: ${a.frames.length} frames evenly spaced from "${a.name}"]` });
+      for (const f of a.frames) {
+        userBlocks.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.dataB64 } });
+      }
+      summaryParts.push('video:' + a.name + '(' + a.frames.length + 'f)');
+    } else if (a.kind === 'link') {
+      userBlocks.push({ type: 'text', text: a.text });
+      summaryParts.push('link:' + (a.name || ''));
+    } else if (a.kind === 'tradingview') {
+      userBlocks.push({ type: 'text', text: `(No screenshot — analyzing ${currentSym} based on the user's open TradingView chart.)` });
+      summaryParts.push('tradingview:' + currentSym);
+    }
   }
-  const promptText = (userText || 'Analyze this chart for trends, liquidity sweeps, key levels, and relevant news/catalysts.') + `\n\nContext: ${ctx}`;
-  userBlocks.push({ type: 'text', text: promptText });
 
-  agentPushMsg('user', userText || '(analyze chart)');
+  const defaultPrompt = haveAttachment
+    ? 'Analyze the attached materials for trading-relevant signals (trends, liquidity sweeps, key levels, catalysts).'
+    : 'Give a concise market take.';
+  userBlocks.push({ type: 'text', text: (userText || defaultPrompt) + `\n\nContext: ${ctx}` });
+
+  // UI: user message reflects what was sent
+  const userPreview = userText
+    || (summaryParts.length ? '(' + summaryParts.join(', ') + ')' : '(analyze)');
+  agentPushMsg('user', userPreview);
   ta.value = '';
   const thinking = agentPushThinking();
   document.getElementById('agentSendBtn').disabled = true;
@@ -2692,7 +3090,8 @@ async function agentSend() {
   agentHistory.push({ role: 'user', content: userBlocks });
 
   const model = localStorage.getItem(AGENT_LS.model) || 'claude-haiku-4-5-20251001';
-  const system = 'You are a concise trading assistant. When given a chart image, identify: trend direction, key support/resistance, liquidity sweeps / stop-runs, order blocks, fair value gaps, and probable next move. Reference recent macro/company news catalysts when relevant from your knowledge. Be specific but brief — bullets preferred. Always end with: "Not financial advice."';
+  const maxTokens = agentGetMaxTokens();
+  const system = 'You are JARVIS, a sharp trading copilot. Identify trend direction, key support/resistance, liquidity sweeps, order blocks, fair value gaps, and probable next move from charts. For PDFs/videos/links, extract the trading-relevant signal succinctly. Reference relevant macro/company catalysts you know about. Be specific but brief — bullets preferred, no fluff. Always end with: "Not financial advice."';
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2705,7 +3104,7 @@ async function agentSend() {
       },
       body: JSON.stringify({
         model: model,
-        max_tokens: 700,
+        max_tokens: maxTokens,
         system: system,
         messages: agentHistory,
       }),
@@ -2715,16 +3114,21 @@ async function agentSend() {
     if (!res.ok) {
       const msg = (data && data.error && data.error.message) || ('HTTP '+res.status);
       agentPushMsg('assistant', 'Error: ' + msg, true);
+      showToast('Request failed', msg, 'error', 5000);
       agentHistory.pop();
     } else {
       const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim() || '(empty response)';
       agentHistory.push({ role: 'assistant', content: [{ type: 'text', text }] });
       agentPushMsg('assistant', text);
       agentBumpUsed();
+      // Clear ephemeral attachments after a successful send (keeps TradingView refs)
+      agentAttachments = agentAttachments.filter(a => a.kind === 'tradingview');
+      agentRenderAttachments();
     }
   } catch (err) {
     thinking.remove();
     agentPushMsg('assistant', 'Network error: ' + err.message, true);
+    showToast('Network error', err.message, 'error', 5000);
     agentHistory.pop();
   } finally {
     agentRenderCredit();
