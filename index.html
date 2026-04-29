@@ -2,202 +2,206 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Fidelity-Style Trading App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wolfs Trading — Pro Terminal</title>
   <style>
     /* ═══════════════════════════════════════════
-       DESIGN TOKENS — Fidelity Mobile
+       DESIGN TOKENS — Pro Desktop Terminal
     ═══════════════════════════════════════════ */
     :root {
-      --fid-green: #367C2B;
-      --fid-green-light: #4a9e3c;
-      --fid-green-bg: rgba(54,124,43,.08);
-      --fid-green-bg-strong: rgba(54,124,43,.15);
+      --fid-green: #2db84d;
+      --fid-green-light: #46d769;
+      --fid-green-bg: rgba(45,184,77,.10);
+      --fid-green-bg-strong: rgba(45,184,77,.20);
 
-      --bg-primary: #f4f4f4;
-      --bg-card: #ffffff;
-      --bg-nav: #ffffff;
-      --bg-header: #ffffff;
+      --bg-primary: #0b0e14;
+      --bg-card: #131720;
+      --bg-card-hover: #1a1f2b;
+      --bg-nav: #0f131a;
+      --bg-header: #0a0d12;
+      --bg-elevated: #1c2230;
 
-      --text-primary: #1a1a1a;
-      --text-secondary: #555555;
-      --text-muted: #888888;
-      --text-light: #aaaaaa;
+      --text-primary: #e7ecf3;
+      --text-secondary: #a8b2c1;
+      --text-muted: #6b7585;
+      --text-light: #4d5666;
 
-      --positive: #367C2B;
-      --positive-bg: rgba(54,124,43,.1);
-      --negative: #c0392b;
-      --negative-bg: rgba(192,57,43,.1);
-      --warning: #e67e22;
+      --positive: #2db84d;
+      --positive-bg: rgba(45,184,77,.12);
+      --negative: #ff4d5e;
+      --negative-bg: rgba(255,77,94,.12);
+      --warning: #ffa628;
 
-      --border: #e8e8e8;
-      --border-light: #f0f0f0;
+      --accent: #00e5ff;
+      --accent-2: #6c5ce7;
+      --accent-glow: 0 0 18px rgba(0,229,255,.55);
 
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
-      --shadow-md: 0 2px 8px rgba(0,0,0,.08);
-      --shadow-card: 0 1px 4px rgba(0,0,0,.05);
+      --border: #20262f;
+      --border-light: #1a1f28;
 
-      --radius: 12px;
-      --radius-sm: 8px;
-      --radius-pill: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.4);
+      --shadow-md: 0 4px 18px rgba(0,0,0,.45);
+      --shadow-card: 0 2px 10px rgba(0,0,0,.35);
 
-      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      --font-mono: 'SF Mono', 'Menlo', 'Consolas', monospace;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --radius-pill: 999px;
 
-      --nav-h: 56px;
-      --header-h: 52px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', monospace;
+
+      --nav-h: 0px;
+      --header-h: 60px;
+      --max-width: 1440px;
     }
 
     /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      height: 100%; width: 100%;
+      min-height: 100%; width: 100%;
       background: var(--bg-primary);
       color: var(--text-primary);
       font-family: var(--font);
-      font-size: 15px;
-      line-height: 1.45;
-      overflow: hidden;
+      font-size: 14px;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    button { cursor: pointer; font-family: var(--font); border: none; background: none; }
-    input { font-family: var(--font); }
+    body {
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(0,229,255,.05), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, rgba(108,92,231,.06), transparent 60%),
+        var(--bg-primary);
+    }
+    button { cursor: pointer; font-family: var(--font); border: none; background: none; color: inherit; }
+    input, select, textarea { font-family: var(--font); color: var(--text-primary); }
     a { color: inherit; text-decoration: none; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #232a36; border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2c3444; }
 
     /* ═══════════════════════════════════════════
-       HEADER
+       HEADER + TOP NAV
     ═══════════════════════════════════════════ */
     .app-header {
       height: var(--header-h);
-      background: var(--bg-header);
+      background: rgba(10,13,18,.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      padding: 0 16px;
-      gap: 12px;
+      padding: 0 24px;
+      gap: 18px;
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .app-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
+    .app-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .app-logo-icon {
-      width: 30px; height: 30px;
-      background: var(--fid-green);
-      border-radius: 6px;
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--fid-green) 0%, var(--accent) 100%);
+      border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 11px;
+      color: #0a0d12; font-weight: 800; font-size: 13px;
+      box-shadow: 0 0 18px rgba(45,184,77,.3);
     }
     .app-logo-text {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--fid-green);
+      font-size: 17px; font-weight: 800;
+      background: linear-gradient(90deg, var(--fid-green) 0%, var(--accent) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
       letter-spacing: -.3px;
     }
-    .header-search {
+
+    /* Top horizontal tab nav */
+    .top-nav {
+      display: flex;
+      gap: 4px;
       flex: 1;
-      max-width: 280px;
-      margin-left: auto;
+      justify-content: center;
+    }
+    .nav-item {
       display: flex;
       align-items: center;
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      padding: 6px 14px;
       gap: 8px;
-      transition: border-color .2s;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      transition: background .15s, color .15s;
+      position: relative;
+    }
+    .nav-item svg { width: 16px; height: 16px; transition: color .15s; opacity: .8; }
+    .nav-item:hover { background: rgba(255,255,255,.04); color: var(--text-primary); }
+    .nav-item.active { color: var(--fid-green); background: var(--fid-green-bg); }
+    .nav-item.active svg { color: var(--fid-green); opacity: 1; }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 16px; right: 16px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--fid-green), var(--accent));
+      border-radius: 2px;
+    }
+
+    .header-search {
+      width: 260px;
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      gap: 8px;
+      transition: border-color .2s, box-shadow .2s;
     }
     .header-search:focus-within {
       border-color: var(--fid-green);
-      box-shadow: 0 0 0 2px var(--fid-green-bg);
+      box-shadow: 0 0 0 3px var(--fid-green-bg);
     }
     .header-search svg { flex-shrink: 0; color: var(--text-muted); }
     .header-search input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      outline: none;
-      font-size: 14px;
-      color: var(--text-primary);
-      text-transform: uppercase;
-      font-weight: 500;
+      flex: 1; border: none; background: transparent; outline: none;
+      font-size: 13px; color: var(--text-primary);
+      text-transform: uppercase; font-weight: 600; letter-spacing: .5px;
     }
-    .header-search input::placeholder { text-transform: none; font-weight: 400; color: var(--text-light); }
+    .header-search input::placeholder { text-transform: none; font-weight: 400; color: var(--text-muted); letter-spacing: 0; }
     .header-search .search-go {
-      background: var(--fid-green);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-pill);
-      padding: 4px 12px;
-      font-size: 12px;
-      font-weight: 600;
+      background: var(--fid-green); color: #0a0d12;
+      border-radius: var(--radius-sm);
+      padding: 4px 12px; font-size: 11px; font-weight: 700;
       transition: background .15s;
     }
     .header-search .search-go:hover { background: var(--fid-green-light); }
     .header-clock {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);
+      flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
     }
     .market-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
+      width: 6px; height: 6px; border-radius: 50%;
       background: var(--positive);
+      box-shadow: 0 0 8px var(--positive);
       animation: blink 2.5s ease-in-out infinite;
     }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    /* ═══════════════════════════════════════════
-       BOTTOM NAV
-    ═══════════════════════════════════════════ */
-    .bottom-nav {
-      height: var(--nav-h);
-      background: var(--bg-nav);
-      border-top: 1px solid var(--border);
-      display: flex;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 100;
-    }
-    .nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      color: var(--text-muted);
-      font-size: 10px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: color .15s;
-      padding: 4px 0;
-    }
-    .nav-item svg { transition: color .15s; }
-    .nav-item.active { color: var(--fid-green); }
-    .nav-item.active svg { color: var(--fid-green); }
-    .nav-item:hover { color: var(--fid-green-light); }
+    /* Hide legacy bottom nav (moved into header) */
+    .bottom-nav { display: none !important; }
 
     /* ═══════════════════════════════════════════
        MAIN CONTENT AREA
     ═══════════════════════════════════════════ */
     .app-body {
-      height: calc(100vh - var(--header-h) - var(--nav-h));
-      overflow-y: auto;
-      overflow-x: hidden;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 24px 24px 80px;
       scroll-behavior: smooth;
     }
-    .app-body::-webkit-scrollbar { width: 0; }
     .tab-view { display: none; }
     .tab-view.active { display: block; }
 
@@ -439,9 +443,12 @@
     .news-tabs {
       display: flex;
       background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 12px;
       position: sticky;
-      top: 0;
+      top: calc(var(--header-h) + 8px);
       z-index: 10;
     }
     .news-tab-btn {
@@ -705,21 +712,26 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.5);
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 200;
-      align-items: flex-end;
+      align-items: center;
       justify-content: center;
+      padding: 20px;
     }
     .modal-overlay.open { display: flex; }
     .modal-sheet {
       background: var(--bg-card);
-      border-radius: 16px 16px 0 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
       width: 100%;
       max-width: 600px;
-      max-height: 75vh;
+      max-height: 80vh;
       overflow-y: auto;
-      padding: 20px;
+      padding: 24px;
       animation: slideUp .25s ease;
+      box-shadow: var(--shadow-md);
     }
     @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } }
     .modal-handle {
@@ -751,202 +763,530 @@
     .modal-close:hover { background: var(--border); }
 
     /* ═══════════════════════════════════════════
-       AGENT TAB
+       FULLSCREEN TRADINGVIEW MODAL
     ═══════════════════════════════════════════ */
+    .fs-modal {
+      display: none;
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(5,7,12,.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .fs-modal.active { display: flex; flex-direction: column; }
+    .fs-bar {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-header);
+    }
+    .fs-title { font-weight: 800; font-size: 16px; color: var(--text-primary); }
+    .fs-title span { color: var(--accent); margin-left: 6px; }
+    .fs-spacer { flex: 1; }
+    .fs-close {
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600;
+      color: var(--text-primary);
+    }
+    .fs-close:hover { background: var(--negative-bg); border-color: var(--negative); color: var(--negative); }
+    .fs-body { flex: 1; position: relative; background: #0a0d12; }
+    .fs-body iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .chart-fs-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      z-index: 10;
+      background: rgba(10,13,18,.85);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .15s;
+      backdrop-filter: blur(8px);
+    }
+    .chart-fs-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--accent-glow); }
+
+    /* ═══════════════════════════════════════════
+       AGENT TAB — JARVIS HOLO STYLE
+    ═══════════════════════════════════════════ */
+    #tab-agent {
+      position: relative;
+    }
+    .agent-shell {
+      position: relative;
+      background:
+        radial-gradient(800px 400px at 50% -10%, rgba(0,229,255,.08), transparent 60%),
+        radial-gradient(600px 400px at 100% 100%, rgba(108,92,231,.08), transparent 60%),
+        linear-gradient(180deg, rgba(15,19,26,.95), rgba(11,14,20,.95));
+      border: 1px solid rgba(0,229,255,.18);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(0,229,255,.05) inset,
+        0 30px 80px rgba(0,0,0,.5),
+        0 0 60px rgba(0,229,255,.08);
+    }
+    /* Animated scanline overlay */
+    .agent-shell::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,229,255,.04) 50%, transparent 100%);
+      background-size: 100% 8px;
+      pointer-events: none;
+      animation: scan 6s linear infinite;
+      opacity: .35;
+      z-index: 1;
+    }
+    @keyframes scan {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100vh; }
+    }
+    /* Animated grid */
+    .agent-shell::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 80%);
+      z-index: 1;
+    }
+    .agent-inner { position: relative; z-index: 2; padding: 0; }
+
     .agent-header {
-      padding: 14px 16px 10px;
+      padding: 22px 26px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      border-bottom: 1px solid var(--border-light);
-      background: var(--bg-card);
+      gap: 14px;
+      border-bottom: 1px solid rgba(0,229,255,.12);
+      background: linear-gradient(90deg, rgba(0,229,255,.05), transparent 60%);
     }
-    .agent-title { font-size: 16px; font-weight: 700; }
-    .agent-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .agent-credit {
-      font-size: 11px;
-      font-weight: 600;
-      font-family: var(--font-mono);
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      background: var(--fid-green-bg);
-      color: var(--fid-green);
-      white-space: nowrap;
-    }
-    .agent-credit.low { background: rgba(230,126,34,.12); color: var(--warning); }
-    .agent-credit.out { background: var(--negative-bg); color: var(--negative); }
-    .agent-toolbar {
-      padding: 10px 12px;
+    .agent-brand {
       display: flex;
-      gap: 8px;
+      align-items: center;
+      gap: 14px;
+    }
+    .agent-orb {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+      background: radial-gradient(circle at 30% 30%, var(--accent) 0%, #6c5ce7 60%, transparent 100%);
+      box-shadow:
+        0 0 30px rgba(0,229,255,.6),
+        0 0 60px rgba(108,92,231,.35),
+        inset 0 0 20px rgba(255,255,255,.15);
+      animation: orbPulse 3s ease-in-out infinite;
+    }
+    .agent-orb::before, .agent-orb::after {
+      content: '';
+      position: absolute; inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,229,255,.4);
+      animation: orbRing 3s linear infinite;
+    }
+    .agent-orb::after {
+      inset: -16px;
+      border-color: rgba(108,92,231,.3);
+      animation-duration: 4.5s;
+      animation-direction: reverse;
+    }
+    @keyframes orbPulse {
+      0%,100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.05); filter: brightness(1.15); }
+    }
+    @keyframes orbRing {
+      0% { transform: rotate(0); opacity: .6; }
+      50% { opacity: 1; }
+      100% { transform: rotate(360deg); opacity: .6; }
+    }
+    .agent-title-block .agent-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      background: linear-gradient(90deg, var(--accent) 0%, #fff 50%, var(--accent-2) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      text-transform: uppercase;
+    }
+    .agent-title-block .agent-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .agent-status-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .agent-status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 700;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(0,229,255,.08);
+      color: var(--accent);
+      border: 1px solid rgba(0,229,255,.25);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    .agent-status-pill .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    .agent-credit {
+      font-size: 11px; font-weight: 700;
+      font-family: var(--font-mono);
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(45,184,77,.12);
+      color: var(--fid-green);
+      border: 1px solid rgba(45,184,77,.3);
+      white-space: nowrap;
+      letter-spacing: 1px;
+    }
+    .agent-credit.low { background: rgba(255,166,40,.12); color: var(--warning); border-color: rgba(255,166,40,.3); }
+    .agent-credit.out { background: rgba(255,77,94,.12); color: var(--negative); border-color: rgba(255,77,94,.3); }
+
+    .agent-toolbar {
+      padding: 14px 18px;
+      display: flex;
+      gap: 10px;
       flex-wrap: wrap;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-light);
+      border-bottom: 1px solid rgba(0,229,255,.08);
     }
     .agent-btn {
       flex: 1;
-      min-width: 110px;
+      min-width: 130px;
       font-size: 12px;
-      font-weight: 600;
-      padding: 8px 10px;
+      font-weight: 700;
+      padding: 10px 14px;
       border-radius: var(--radius-sm);
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(0,229,255,.18);
       color: var(--text-primary);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-    }
-    .agent-btn.primary { background: var(--fid-green); color: #fff; border-color: var(--fid-green); }
-    .agent-btn.primary:disabled { opacity: .5; cursor: not-allowed; }
-    .agent-btn:hover:not(:disabled) { border-color: var(--fid-green); }
-    .agent-chart-area {
-      margin: 12px;
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-      background: var(--bg-card);
-      min-height: 180px;
+      gap: 8px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      transition: all .2s;
       position: relative;
       overflow: hidden;
     }
-    .agent-chart-area.has-image { border-style: solid; }
+    .agent-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(0,229,255,.15), transparent);
+      transform: translateX(-100%);
+      transition: transform .5s;
+    }
+    .agent-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(0,229,255,.25);
+    }
+    .agent-btn:hover:not(:disabled)::before { transform: translateX(100%); }
+    .agent-btn.primary {
+      background: linear-gradient(135deg, var(--fid-green) 0%, var(--accent) 100%);
+      color: #0a0d12;
+      border-color: transparent;
+      font-weight: 800;
+      box-shadow: 0 0 20px rgba(45,184,77,.35);
+    }
+    .agent-btn.primary:hover:not(:disabled) {
+      box-shadow: 0 0 30px rgba(0,229,255,.45);
+      color: #0a0d12;
+      filter: brightness(1.1);
+    }
+    .agent-btn.primary:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+
+    .agent-chart-area {
+      margin: 18px;
+      border: 1px dashed rgba(0,229,255,.3);
+      border-radius: var(--radius);
+      background: rgba(10,13,18,.5);
+      min-height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+    .agent-chart-area.has-image { border-style: solid; border-color: rgba(0,229,255,.4); }
     .agent-chart-area .agent-chart-placeholder {
-      padding: 28px 18px;
+      padding: 50px 24px;
       text-align: center;
       color: var(--text-muted);
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
+    .agent-chart-area .agent-chart-placeholder strong { color: var(--accent); font-weight: 700; }
     .agent-chart-area img {
-      display: block;
-      width: 100%;
-      max-height: 360px;
+      display: block; width: 100%;
+      max-height: 480px;
       object-fit: contain;
       background: #000;
     }
-    .agent-chart-area iframe { display: block; width: 100%; height: 320px; border: 0; }
+    .agent-chart-area iframe { display: block; width: 100%; height: 460px; border: 0; }
     .agent-chart-clear {
       position: absolute;
-      top: 6px; right: 6px;
-      background: rgba(0,0,0,.55);
-      color: #fff;
-      border-radius: var(--radius-pill);
-      padding: 2px 10px;
+      top: 8px; right: 8px;
+      background: rgba(10,13,18,.85);
+      color: var(--negative);
+      border: 1px solid var(--negative);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       z-index: 2;
+      backdrop-filter: blur(8px);
     }
+    .agent-chart-clear:hover { background: var(--negative); color: #0a0d12; }
+
     .agent-prompt-wrap {
-      margin: 0 12px 10px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
+      margin: 0 18px 12px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(0,229,255,.18);
       border-radius: var(--radius);
-      padding: 10px;
+      padding: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .agent-prompt-wrap:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,255,.1), 0 0 30px rgba(0,229,255,.15);
     }
     .agent-prompt-wrap textarea {
       width: 100%;
       border: none;
       outline: none;
-      resize: none;
+      resize: vertical;
       font-family: var(--font);
       font-size: 14px;
       color: var(--text-primary);
       background: transparent;
-      min-height: 64px;
+      min-height: 70px;
+      line-height: 1.5;
     }
+    .agent-prompt-wrap textarea::placeholder { color: var(--text-muted); }
     .agent-quick {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 10px;
     }
     .agent-chip {
       font-size: 11px;
       font-weight: 600;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: var(--radius-pill);
-      background: var(--bg-primary);
+      background: rgba(0,229,255,.06);
       color: var(--text-secondary);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(0,229,255,.2);
+      transition: all .15s;
     }
-    .agent-chip:hover { border-color: var(--fid-green); color: var(--fid-green); }
+    .agent-chip:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,.12); }
+
     .agent-send-row {
       display: flex;
-      gap: 8px;
-      margin: 0 12px 12px;
+      gap: 10px;
+      margin: 0 18px 16px;
     }
     .agent-send-row .agent-btn { flex: 1; }
-    .agent-msgs { padding: 0 12px 80px; }
+
+    .agent-msgs { padding: 0 18px 24px; }
     .agent-msg {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(0,229,255,.12);
       border-radius: var(--radius);
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      font-size: 13px;
-      line-height: 1.6;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.7;
       color: var(--text-primary);
       white-space: pre-wrap;
       word-wrap: break-word;
+      position: relative;
+      animation: msgIn .35s ease-out;
+    }
+    @keyframes msgIn {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
     .agent-msg.user {
-      background: var(--fid-green-bg);
-      border-color: var(--fid-green-bg-strong);
+      background: rgba(45,184,77,.05);
+      border-color: rgba(45,184,77,.3);
+    }
+    .agent-msg.assistant { border-left: 3px solid var(--accent); }
+    .agent-msg.assistant::before {
+      content: '';
+      position: absolute;
+      left: -1px; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      animation: msgGlow 2s ease-in-out infinite;
+    }
+    @keyframes msgGlow {
+      0%,100% { opacity: .6; }
+      50% { opacity: 1; }
     }
     .agent-msg.error { border-color: var(--negative); color: var(--negative); }
     .agent-msg-role {
       font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .6px;
+      font-weight: 800;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .agent-msg-role::before {
+      content: '◆'; font-size: 8px; color: var(--accent);
     }
     .agent-msg.user .agent-msg-role { color: var(--fid-green); }
+    .agent-msg.user .agent-msg-role::before { content: '▶'; color: var(--fid-green); }
+    .agent-msg .typewriter-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: caret 1s steps(2) infinite;
+      box-shadow: 0 0 6px var(--accent);
+    }
+    @keyframes caret { 50% { opacity: 0; } }
+
+    /* Animated thinking — radar/scanner */
     .agent-thinking {
-      display: flex; gap: 4px; padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 6px 0;
     }
-    .agent-thinking span {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--fid-green);
-      animation: bounce 1.2s infinite ease-in-out;
+    .agent-radar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,229,255,.4);
+      position: relative;
+      flex-shrink: 0;
+      background: radial-gradient(circle, rgba(0,229,255,.15) 0%, transparent 70%);
     }
-    .agent-thinking span:nth-child(2) { animation-delay: .15s; }
-    .agent-thinking span:nth-child(3) { animation-delay: .3s; }
-    @keyframes bounce {
-      0%,80%,100% { transform: scale(.5); opacity: .4; }
-      40% { transform: scale(1); opacity: 1; }
+    .agent-radar::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(0,229,255,.6) 60deg, transparent 60deg);
+      animation: radar 1.6s linear infinite;
     }
+    .agent-radar::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 4px; height: 4px;
+      transform: translate(-50%,-50%);
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+    }
+    @keyframes radar { to { transform: rotate(360deg); } }
+    .agent-thinking-bars {
+      display: flex; gap: 3px; align-items: end; height: 28px;
+    }
+    .agent-thinking-bars span {
+      display: block;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      border-radius: 2px;
+      animation: barFlex 1s ease-in-out infinite;
+      box-shadow: 0 0 6px rgba(0,229,255,.6);
+    }
+    .agent-thinking-bars span:nth-child(1) { height: 40%; animation-delay: 0s; }
+    .agent-thinking-bars span:nth-child(2) { height: 70%; animation-delay: .12s; }
+    .agent-thinking-bars span:nth-child(3) { height: 50%; animation-delay: .24s; }
+    .agent-thinking-bars span:nth-child(4) { height: 90%; animation-delay: .36s; }
+    .agent-thinking-bars span:nth-child(5) { height: 60%; animation-delay: .48s; }
+    .agent-thinking-bars span:nth-child(6) { height: 40%; animation-delay: .6s; }
+    @keyframes barFlex {
+      0%,100% { transform: scaleY(.4); }
+      50% { transform: scaleY(1); }
+    }
+    .agent-thinking-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-family: var(--font-mono);
+    }
+
     .agent-settings {
-      margin: 0 12px 12px;
-      padding: 12px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
+      margin: 12px 18px 18px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(0,229,255,.12);
       border-radius: var(--radius);
       font-size: 12px;
       color: var(--text-secondary);
     }
-    .agent-settings label { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-size: 12px; }
-    .agent-settings input, .agent-settings select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      margin-bottom: 8px;
+    .agent-settings .settings-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
       font-family: var(--font-mono);
     }
-    .agent-settings .row { display: flex; gap: 8px; }
+    .agent-settings label { display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+    .agent-settings input, .agent-settings select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid rgba(0,229,255,.15);
+      background: rgba(10,13,18,.6);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .agent-settings input:focus, .agent-settings select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,255,.1);
+    }
+    .agent-settings .row { display: flex; gap: 12px; }
     .agent-settings .row > div { flex: 1; }
-    .agent-settings .hint { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+    .agent-settings .hint { font-size: 11px; color: var(--text-muted); line-height: 1.6; margin-top: 4px; }
 
     /* ═══════════════════════════════════════════
        RESPONSIVE — Desktop widening
     ═══════════════════════════════════════════ */
-    @media (min-width: 768px) {
-      .app-body { max-width: 480px; margin: 0 auto; }
+    /* Desktop multi-column responsive */
+    @media (max-width: 900px) {
+      .top-nav .nav-item span { display: none; }
+      .header-search { width: 180px; }
+      .app-body { padding: 16px 12px 60px; }
+    }
+    @media (max-width: 600px) {
+      .app-header { padding: 0 12px; gap: 10px; }
+      .app-logo-text { display: none; }
+      .header-clock { display: none; }
     }
   </style>
 </head>
@@ -957,11 +1297,33 @@
 ═══════════════════════════════════════════ -->
 <header class="app-header">
   <div class="app-logo">
-    <div class="app-logo-icon">FI</div>
-    <div class="app-logo-text">Fidelity</div>
+    <div class="app-logo-icon">W</div>
+    <div class="app-logo-text">WOLFS Trading</div>
   </div>
+  <nav class="top-nav">
+    <div class="nav-item active" onclick="switchTab('home',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('quote',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Quote</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('news',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+      <span>News</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('analysis',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21H4.6c-.56 0-.84 0-1.05-.11a1 1 0 0 1-.44-.44C3 20.24 3 19.96 3 19.4V3"/><path d="m7 14 4-4 4 4 6-6"/></svg>
+      <span>Analysis</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('agent',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 14 8l6 2-6 2-2 6-2-6-6-2 6-2z"/><circle cx="19" cy="19" r="2"/></svg>
+      <span>Agent</span>
+    </div>
+  </nav>
   <div class="header-search">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="text" id="symInput" placeholder="Search symbol…" value="AAPL" maxlength="12" />
     <button class="search-go" onclick="loadSymbol()">Go</button>
   </div>
@@ -970,6 +1332,18 @@
     <span id="clock">--:--</span>
   </div>
 </header>
+
+<!-- ═══════════════════════════════════════════
+     FULLSCREEN TRADINGVIEW MODAL
+═══════════════════════════════════════════ -->
+<div class="fs-modal" id="fsModal" onclick="if(event.target===this)closeFullscreen()">
+  <div class="fs-bar">
+    <div class="fs-title">Live Chart<span id="fsSymLabel">— AAPL</span></div>
+    <div class="fs-spacer"></div>
+    <button class="fs-close" onclick="closeFullscreen()">✕ Close</button>
+  </div>
+  <div class="fs-body" id="fsBody"></div>
+</div>
 
 <!-- ═══════════════════════════════════════════
      MAIN BODY
@@ -1002,6 +1376,10 @@
 
     <div class="chart-section">
       <div class="chart-container" id="chartContainer">
+        <button class="chart-fs-btn" onclick="openFullscreen(currentSym)" title="Open full-screen TradingView">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Fullscreen
+        </button>
         <div class="chart-fallback" id="chartFallback">Loading chart…</div>
       </div>
       <div class="period-bar" id="periodBar">
@@ -1143,90 +1521,98 @@
 
   <!-- ── AGENT TAB ── -->
   <div class="tab-view" id="tab-agent">
-    <div class="agent-header">
-      <div>
-        <div class="agent-title">Trading Agent</div>
-        <div class="agent-sub">Chart vision · trends · liquidity sweeps · news</div>
-      </div>
-      <div class="agent-credit" id="agentCredit">— left</div>
-    </div>
-
-    <div class="agent-toolbar">
-      <button class="agent-btn" onclick="document.getElementById('agentFile').click()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Upload chart
-      </button>
-      <button class="agent-btn" onclick="agentUseTradingView()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
-        Use TradingView (<span id="agentSym">AAPL</span>)
-      </button>
-      <button class="agent-btn" onclick="agentClearImage()">Clear</button>
-      <input id="agentFile" type="file" accept="image/*" style="display:none" onchange="agentFileSelected(event)" />
-    </div>
-
-    <div class="agent-chart-area" id="agentChartArea">
-      <div class="agent-chart-placeholder">
-        Paste a chart screenshot (Cmd/Ctrl+V), upload an image, or load a TradingView chart of the current symbol — then ask the agent below.
-      </div>
-    </div>
-
-    <div class="agent-prompt-wrap">
-      <textarea id="agentPrompt" placeholder="Ask about trends, liquidity sweeps, support/resistance, news catalysts…"></textarea>
-      <div class="agent-quick">
-        <button class="agent-chip" onclick="agentQuick('Identify the current trend, key support/resistance, and any liquidity sweeps or stop-runs visible.')">Trend & sweeps</button>
-        <button class="agent-chip" onclick="agentQuick('Mark order blocks, fair value gaps, and likely liquidity targets above/below.')">Order blocks / FVG</button>
-        <button class="agent-chip" onclick="agentQuick('Summarize recent news and catalysts that could explain this price action.')">News & catalysts</button>
-        <button class="agent-chip" onclick="agentQuick('Give a concise trade idea with entry, stop, and target. Note the risk.')">Trade idea</button>
-      </div>
-    </div>
-
-    <div class="agent-send-row">
-      <button class="agent-btn primary" id="agentSendBtn" onclick="agentSend()">Analyze</button>
-    </div>
-
-    <div class="agent-msgs" id="agentMsgs"></div>
-
-    <div class="agent-settings" id="agentSettings">
-      <label for="agentKey">Anthropic API key <span style="font-weight:400;color:var(--text-muted);">(stored locally)</span></label>
-      <input id="agentKey" type="password" placeholder="sk-ant-…" />
-      <div class="row">
-        <div>
-          <label for="agentModel">Model</label>
-          <select id="agentModel">
-            <option value="claude-haiku-4-5-20251001">Haiku 4.5 (cheapest)</option>
-            <option value="claude-sonnet-4-6">Sonnet 4.6</option>
-            <option value="claude-opus-4-7">Opus 4.7 (priciest)</option>
-          </select>
+   <div class="agent-shell">
+    <div class="agent-inner">
+      <div class="agent-header">
+        <div class="agent-brand">
+          <div class="agent-orb"></div>
+          <div class="agent-title-block">
+            <div class="agent-title">JARVIS · Trade AI</div>
+            <div class="agent-sub">Vision · Trends · Liquidity · News</div>
+          </div>
         </div>
-        <div>
-          <label for="agentDaily">Daily message cap</label>
-          <input id="agentDaily" type="number" min="1" max="500" value="25" />
+        <div class="agent-status-strip">
+          <span class="agent-status-pill"><span class="dot"></span> Online</span>
+          <span class="agent-credit" id="agentCredit">— left</span>
         </div>
       </div>
-      <button class="agent-btn primary" onclick="agentSaveSettings()" style="width:100%;margin-top:4px;">Save settings</button>
-      <div class="hint" style="margin-top:8px;">
-        Cap limits how many agent calls/day to control credit usage. Image analysis uses extra tokens; Haiku 4.5 keeps cost minimal. Key never leaves your browser.
-      </div>
-    </div>
 
-    <div class="disclaimer-bar">⚠ AI output may be inaccurate — not financial advice</div>
+      <div class="agent-toolbar">
+        <button class="agent-btn" onclick="document.getElementById('agentFile').click()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload chart
+        </button>
+        <button class="agent-btn" onclick="agentUseTradingView()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+          TradingView (<span id="agentSym">AAPL</span>)
+        </button>
+        <button class="agent-btn" onclick="openFullscreen(agentTV || currentSym)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Fullscreen
+        </button>
+        <button class="agent-btn" onclick="agentClearImage()">Clear</button>
+        <input id="agentFile" type="file" accept="image/*" style="display:none" onchange="agentFileSelected(event)" />
+      </div>
+
+      <div class="agent-chart-area" id="agentChartArea">
+        <div class="agent-chart-placeholder">
+          <strong>Paste</strong> a chart screenshot (Cmd/Ctrl+V), <strong>upload</strong> an image, or load a <strong>TradingView</strong> chart of the current symbol — then ask the agent below.
+        </div>
+      </div>
+
+      <div class="agent-prompt-wrap">
+        <textarea id="agentPrompt" placeholder="Ask about trends, liquidity sweeps, support/resistance, news catalysts…"></textarea>
+        <div class="agent-quick">
+          <button class="agent-chip" onclick="agentQuick('Identify the current trend, key support/resistance, and any liquidity sweeps or stop-runs visible.')">Trend &amp; sweeps</button>
+          <button class="agent-chip" onclick="agentQuick('Mark order blocks, fair value gaps, and likely liquidity targets above/below.')">Order blocks / FVG</button>
+          <button class="agent-chip" onclick="agentQuick('Summarize recent news and catalysts that could explain this price action.')">News &amp; catalysts</button>
+          <button class="agent-chip" onclick="agentQuick('Give a concise trade idea with entry, stop, and target. Note the risk.')">Trade idea</button>
+        </div>
+      </div>
+
+      <div class="agent-send-row">
+        <button class="agent-btn primary" id="agentSendBtn" onclick="agentSend()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Analyze
+        </button>
+      </div>
+
+      <div class="agent-msgs" id="agentMsgs"></div>
+
+      <div class="agent-settings" id="agentSettings">
+        <div class="settings-title">// SYSTEM SETTINGS</div>
+        <label for="agentKey">Anthropic API key <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0;">(stored locally)</span></label>
+        <input id="agentKey" type="password" placeholder="sk-ant-…" />
+        <div class="row">
+          <div>
+            <label for="agentModel">Model</label>
+            <select id="agentModel">
+              <option value="claude-haiku-4-5-20251001">Haiku 4.5 (cheapest)</option>
+              <option value="claude-sonnet-4-6">Sonnet 4.6</option>
+              <option value="claude-opus-4-7">Opus 4.7 (priciest)</option>
+            </select>
+          </div>
+          <div>
+            <label for="agentDaily">Daily cap</label>
+            <input id="agentDaily" type="number" min="1" max="500" value="25" />
+          </div>
+        </div>
+        <button class="agent-btn primary" onclick="agentSaveSettings()" style="width:100%;margin-top:4px;">Save settings</button>
+        <div class="hint" style="margin-top:10px;">
+          Daily cap limits agent calls to control credit usage. Image analysis uses more tokens — Haiku 4.5 keeps cost minimal. Key never leaves your browser.
+        </div>
+      </div>
+
+      <div class="disclaimer-bar">⚠ AI output may be inaccurate — not financial advice</div>
+    </div>
+   </div>
   </div>
 
 </div><!-- /app-body -->
 
-<!-- ═══════════════════════════════════════════
-     BOTTOM NAVIGATION
-═══════════════════════════════════════════ -->
-<nav class="bottom-nav">
-  <div class="nav-item active" onclick="switchTab('home',this)">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span>Home</span>
-  </div>
-  <div class="nav-item" onclick="switchTab('quote',this)">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    <span>Quote</span>
-  </div>
-  <div class="nav-item" onclick="switchTab('news',this)">
+<!-- legacy bottom nav removed — moved into header -->
+<nav class="bottom-nav" style="display:none">
+  <div class="nav-item" onclick="switchTab('home',this)">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
     <span>News</span>
   </div>
@@ -1313,8 +1699,47 @@ function switchTab(name, navEl) {
   document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if (navEl) navEl.classList.add('active');
-  document.getElementById('appBody').scrollTop = 0;
+  if (navEl) {
+    navEl.classList.add('active');
+  } else {
+    // sync top-nav active state by tab name
+    document.querySelectorAll('.top-nav .nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+name+"'")) n.classList.add('active');
+    });
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── FULLSCREEN TRADINGVIEW ──────────────
+function openFullscreen(sym) {
+  sym = sym || currentSym || 'AAPL';
+  const tvSym = (SYMBOLS[sym] && SYMBOLS[sym].tvSym) || ('NASDAQ:'+sym);
+  document.getElementById('fsSymLabel').textContent = '— ' + sym;
+  // Use TradingView Advanced Chart embed (full features incl. drawing tools)
+  const url = 'https://s.tradingview.com/widgetembed/?frameElementId=tv_fs'
+    + '&symbol=' + encodeURIComponent(tvSym)
+    + '&interval=D'
+    + '&theme=dark'
+    + '&style=1'
+    + '&timezone=exchange'
+    + '&withdateranges=1'
+    + '&hide_side_toolbar=0'
+    + '&allow_symbol_change=1'
+    + '&save_image=1'
+    + '&studies=%5B%5D'
+    + '&hideideas=1'
+    + '&details=1'
+    + '&hotlist=0'
+    + '&calendar=0'
+    + '&locale=en';
+  document.getElementById('fsBody').innerHTML = '<iframe src="'+url+'" allow="fullscreen" allowfullscreen></iframe>';
+  document.getElementById('fsModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeFullscreen() {
+  document.getElementById('fsModal').classList.remove('active');
+  document.getElementById('fsBody').innerHTML = '';
+  document.body.style.overflow = '';
 }
 
 // ─── MARKET CARDS ────────────────────────
@@ -2045,7 +2470,10 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     agentSend();
   }
-  if (e.key==='Escape') closeModal();
+  if (e.key==='Escape') {
+    if (document.getElementById('fsModal').classList.contains('active')) closeFullscreen();
+    else closeModal();
+  }
 });
 
 // ═══════════════════════════════════════════
@@ -2177,24 +2605,53 @@ function agentQuick(text) {
 
 function agentPushMsg(role, text, isError) {
   const wrap = document.createElement('div');
-  wrap.className = 'agent-msg ' + (role === 'user' ? 'user' : '') + (isError ? ' error' : '');
+  wrap.className = 'agent-msg ' + (role === 'user' ? 'user' : 'assistant') + (isError ? ' error' : '');
   const r = document.createElement('div');
   r.className = 'agent-msg-role';
-  r.textContent = role === 'user' ? 'You' : 'Agent';
+  r.textContent = role === 'user' ? 'You' : 'Jarvis';
   wrap.appendChild(r);
   const body = document.createElement('div');
-  body.textContent = text;
+  body.className = 'agent-msg-body';
   wrap.appendChild(body);
   document.getElementById('agentMsgs').appendChild(wrap);
-  document.getElementById('appBody').scrollTop = document.getElementById('appBody').scrollHeight;
+  if (role === 'assistant' && !isError) {
+    typewriter(body, text);
+  } else {
+    body.textContent = text;
+  }
+  setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 30);
   return wrap;
+}
+function typewriter(el, text) {
+  el.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  el.appendChild(cursor);
+  let i = 0;
+  const total = text.length;
+  // Tune speed: ~600 chars/sec for fluid sci-fi feel; faster for very long replies.
+  const stepMs = total > 1200 ? 4 : total > 600 ? 8 : 12;
+  const charsPerStep = total > 1200 ? 4 : total > 600 ? 2 : 1;
+  const tick = () => {
+    if (i >= total) { cursor.remove(); return; }
+    const next = text.slice(i, i + charsPerStep);
+    cursor.before(document.createTextNode(next));
+    i += charsPerStep;
+    setTimeout(tick, stepMs);
+  };
+  tick();
 }
 function agentPushThinking() {
   const wrap = document.createElement('div');
-  wrap.className = 'agent-msg';
-  wrap.innerHTML = '<div class="agent-msg-role">Agent</div><div class="agent-thinking"><span></span><span></span><span></span></div>';
+  wrap.className = 'agent-msg assistant';
+  wrap.innerHTML = '<div class="agent-msg-role">Jarvis</div>'
+    + '<div class="agent-thinking">'
+    + '<div class="agent-radar"></div>'
+    + '<div class="agent-thinking-bars"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
+    + '<div class="agent-thinking-label">Analyzing chart…</div>'
+    + '</div>';
   document.getElementById('agentMsgs').appendChild(wrap);
-  document.getElementById('appBody').scrollTop = document.getElementById('appBody').scrollHeight;
+  setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 30);
   return wrap;
 }
 
